@@ -71,26 +71,37 @@ public class MainActivity extends AppCompatActivity {
 
         String url ="https://simplifiedcoding.net/demos/view-flipper/heroes.php";
 
-        // Request a string response from the provided URL.
         StringRequest stringRequest =
                 new StringRequest(Request.Method.GET, url,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
-                                // Display the first 500 characters of the response string.
-                                //txt.setText("Response is: "+ response.substring(0,500));
-                                Log.d("json", "Response is: "+ response);
                                 heroList = new ArrayList<>();
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    Log.d("json", jsonObject.getString("heroes"));
+                                    JSONArray jsonArray =  new JSONArray(jsonObject.getString("heroes"));
+                                    Log.d("json", jsonArray.toString());
 
-                                
+                                    for(int i = 0; i < jsonArray.length(); i++){
+                                        JSONObject tmpObject = jsonArray.getJSONObject(i);
+                                        Hero tmpHero  = new Hero();
+                                        tmpHero.setHeroName(tmpObject.getString("name"));
+                                        tmpHero.setHeroImage(tmpObject.getString("imageurl"));
+                                        heroList.add(tmpHero);
+                                        Log.d("json", "name: "+tmpHero.getHeroName()+" url"+ tmpHero.getHeroImage());
+                                    }
 
 
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         //txt.setText("That didn't work!" + error.toString());
-                        Log.d("Error", "That didn't work!" + error.toString());
+                        Log.d("json", "That didn't work! " + error.toString());
                     }
                 });
 
