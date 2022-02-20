@@ -1,6 +1,8 @@
 package com.example.herorequestsvolley;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +18,7 @@ import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.herorequestsvolley.adapter.Hero;
+import com.example.herorequestsvolley.adapter.HeroAdapter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -36,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findViewById(R.id.btnJson).setOnClickListener(v -> stringRequest());
+        findViewById(R.id.btnJson).setOnClickListener(view -> stringRequest());
         queue = Volley.newRequestQueue(this);
     }
 
@@ -89,9 +92,9 @@ public class MainActivity extends AppCompatActivity {
                                         tmpHero.setHeroName(tmpObject.getString("name"));
                                         tmpHero.setHeroImage(tmpObject.getString("imageurl"));
                                         heroList.add(tmpHero);
-                                        Log.d("json", "name: "+tmpHero.getHeroName()+" url"+ tmpHero.getHeroImage());
+                                        Log.d("json", "name: "+tmpHero.getHeroName()+" url "+ tmpHero.getHeroImage());
                                     }
-
+                                    initRecycler();
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -106,7 +109,14 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         // Add the request to the RequestQueue.
+
         queue.add(stringRequest);
 
+    }
+    private void initRecycler(){
+        RecyclerView recyclerView = findViewById(R.id.heroRecycler);
+        HeroAdapter heroAdapter = new HeroAdapter(getApplicationContext(), heroList);
+        recyclerView.setAdapter(heroAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
     }
 }

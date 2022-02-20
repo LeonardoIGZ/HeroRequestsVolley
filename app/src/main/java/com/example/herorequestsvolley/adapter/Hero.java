@@ -1,6 +1,7 @@
 package com.example.herorequestsvolley.adapter;
 
 public class Hero {
+
     String heroName;
     String heroImage;
 
@@ -19,6 +20,5 @@ public class Hero {
     public void setHeroImage(String heroImage) {
         this.heroImage = heroImage;
     }
-
 
 }
